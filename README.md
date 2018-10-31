@@ -35,4 +35,4 @@ Termination of the process will take place when the difference in RMSE between M
 * Enter the matrix to be decomposed
 ### Result
 * Matrices U, Epsilon and V respectively
-* Estimated M from the relation M_estimate = U x Epsilon x V';
+* Estimated M from the relation M_estimate = U x Epsilon x V'
