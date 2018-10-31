@@ -1,0 +1,101 @@
+clear all;
+close all;
+%%
+prompt = 'Enter the sparse matrix to decompose(use NaN for sparse spaces): ';
+M = input(prompt);
+[rows, columns] = size(M);
+prompt = 'Enter the value of internal dimension for decomposition: ';
+d = input(prompt);
+
+% computing the number of sparse entries
+empty = isnan(M);
+
+% computing a(average of non blank elements) for initializing of U and V
+a = sum(M(:),'omitnan')/(rows*columns - sum(empty(:)));
+
+
+% initializing U and V with the value of sqrt(a/d)
+U = sqrt(a/d)*ones(rows, d);
+V = sqrt(a/d)*ones(d, columns);
+
+% uncomment this to test the without having to enter a matrix explicitely
+%M = [5 2 4 4 3; 3 1 2 4 1; 2 NaN 3 1 4; 2 5 4 3 5;4 4 5 4 NaN];
+%U = [1 1; 1 1; 1 1; 1 1; 1 1];
+%V = [1 1 1 1 1; 1 1 1 1 1];
+
+P = U*V;
+
+% initializing r and s to the start of both U and V
+ru = 1;
+su = 1;
+rv = 1;
+sv = 1;
+check1 = 0;
+check2 = 0;
+i = 1;
+A_last = 0;
+while true
+    % computing U(r, s) iteratively
+    U(ru, su) = (sum(V(su, :).*(M(su, :) - U(ru, :)*V + U(ru, su)*V(su, :)), 'omitnan'))/sum(V(su, :).*V(su, :), 'omitnan');
+    
+    % computing V(r, s) iteratively
+    V(rv, sv) = (sum(U(:, rv).*(M(:, sv) - U*V(:, sv) + U(:, rv)*V(rv, sv)), 'omitnan'))/sum(U(:, rv).*U(:, rv), 'omitnan');
+    
+    % prompt to start again once iterated through full matrix U and V
+    if ru == size(U, 1) && su == size(U, 2) && rv == size(V, 1) && sv == size(V, 2)
+        ru = 1;
+        su = 1;
+        rv = 1;
+        sv = 1;
+        check1 = 0;
+        check2 = 0;
+        continue
+    end
+    
+    % updating r and s for both U and V iteratively one after another
+    if check1 == 1
+        ru = ru + 1;
+        su = 1;
+    else
+        su = su + 1;
+    end
+    if su == size(U, 2)
+        check1 = 1;
+    else
+        check1 = 0;
+    end
+    if check2 == 1
+        rv = rv + 1;
+        sv = 1;
+    else
+        sv = sv + 1; 
+    end
+    if sv == size(V, 2)
+        check2 = 1;
+    else
+        check2 = 0;
+    end
+    
+    % computing estimated matrix P from the latest value of U and V
+    P = U*V;
+    
+    % computing error b/w the orignal M and estimated matrix P 
+    A = M - P;
+    
+    % taking square of the error
+    A = A.*A;
+    
+    % checking if the difference between RMSE value of current and last
+    % iteration is less than the threshold
+    if abs(sqrt(sum(A(:), 'omitnan')) - sqrt(sum(A_last(:),'omitnan'))) < 0.01
+        % terminating when the value is below the threshold
+        break;
+    end
+    A_last = A;
+    i = i + 1;
+end
+
+fprintf('Esitmated U -\n')
+dis
+fprintf('Estimated p -\n');
+disp(P);
