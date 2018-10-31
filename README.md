@@ -1,10 +1,10 @@
 ## Dimensionality Reduction using UV Decomposition and SV Decomposition
 
-This is a demonstration of how a matrix can decomposed into multiple matrices of smaller dimensions.
+This is a demonstration of how a matrix can be decomposed into matrices of smaller dimensions.
 
-UV decomposition encompasses iteratively updating each element of the decomposed matrices using gradient descent. This type of method allows us to predict values of unknown spaces if the decomposed matrix is sparse.
+UV Decomposition features iteratively updating elements of the decomposed matrices using gradient descent. UVD allows us to predict values of unknown spaces if the decomposed matrix is sparse.
 
-SVD encompasses eigen-decomposition using eigenvalues and eigenvectors. Dimension can be reduced by eliminating the least significant eigenvalues.
+SVD features eigen-decomposition using eigenvalues and eigenvectors. Dimension can be reduced by eliminating the least significant eigenvalues.
 
 ## UV Decomposition -
 ### Running the demo
@@ -20,7 +20,7 @@ SVD encompasses eigen-decomposition using eigenvalues and eigenvectors. Dimensio
 * Also the estimated P matrix(P = U x V) is shown
 
 ### Limitations/Assumptions
-Termination of the process will take place when the difference in RMSE between M(original) and P(estimated) for the current iteration and the last iteration is below a threshold(0.01 in this case), because it is assumed that if the RMSE is not changing much this means that we have reached a saturation point. In some cases this assumption leads to termination at a stage when the matrix has not been accurately decomposed.
+Termination of the process will take place when the difference in RMSE between M(original) and P(estimated) for the current iteration and the last iteration is below a threshold(currently set to 0.01), because it is assumed that if the RMSE is not changing much, it means that we have reached a saturation point. In some cases this assumption leads to termination at a stage when the matrix has not been accurately decomposed.
 
 ## Singular Value Decomposition(SVD)
 ### Computing U, V and epsilon
